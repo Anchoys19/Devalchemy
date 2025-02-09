@@ -1,0 +1,55 @@
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    text-align: center;
+    background: rgba(181, 163, 210, 0.15);
+    backdrop-filter: blur(14px);
+    border-radius: 27px;
+  }
+  
+  h1 {
+    font-family: 'Bruno Ace SC';
+    font-size: 48px;
+    color: #F9FBFB;
+    text-transform: uppercase;
+    margin-bottom: 50px;
+  }
+  
+  button {
+    padding: 18px 57px;
+    border: 1px solid #F9FBFB;
+    border-radius: 30px;
+    background: transparent;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  @media (max-width: 1200px) {
+    h1 {
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+    button {
+      font-size: 18px;
+      padding: 15px 40px;
+    }
+  }
+  
+  @media (max-width: 800px) {
+    h1 {
+      font-size: 28px;
+      margin-bottom: 28px;
+    }
+    button {
+      font-size: 16px;
+      padding: 10px 30px;
+    }
+  }
