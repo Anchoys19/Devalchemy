@@ -1,8 +1,6 @@
 from passlib.hash import argon2
 
 # Example passwords to hash
-passwords = ["password123", "securepass456",
-             "mypassword789", "emmapass123", "admin"]
 
 # Generate Argon2 hashes for each password
 hashed_passwords = [argon2.hash(password) for password in passwords]
