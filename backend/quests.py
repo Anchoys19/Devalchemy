@@ -74,7 +74,7 @@ def create_quest():
     new_quest = dict_to_quest(data, user_id)
     db.session.add(new_quest)
     db.session.commit()
-    return jsonify({"message": "Quest created successfully", "quest": new_quest.to_dict()}), 201
+    return jsonify({"message": "Quest created successfully", "quest": quest_to_dict(new_quest)}), 201
 
 
 @quests_bp.route('/quests/<int:quest_id>', methods=['PUT'])
