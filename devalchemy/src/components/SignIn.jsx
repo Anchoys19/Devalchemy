@@ -9,6 +9,7 @@ const SignIn = () => {
     });
     const [submitted, setSubmitted] = useState(false);
     const [valid, setValid ] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
 
@@ -20,14 +21,37 @@ const SignIn = () => {
         });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (formValues.email && formValues.password) {
-            setValid(true);
-            setTimeout(() => navigate("/"), 1000);
-        }
-        setSubmitted(true);
-    };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      setSubmitted(true);
+      setErrorMessage("");
+
+      if (!formValues.email || !formValues.password) {
+          return;
+      }
+
+      try {
+          const response = await fetch("http://localhost:5000/login", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formValues),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+              throw new Error(data.message || "Login failed");
+          }
+
+          localStorage.setItem("token", data.token);
+          setValid(true);
+          setTimeout(() => navigate("/"), 1000);
+      } catch (error) {
+          setErrorMessage(error.message);
+      }
+  };
 
     return(
         <div className="modal">
