@@ -6,8 +6,9 @@ from sqlalchemy.dialects.mysql import BIT
 from sqlalchemy.orm import Mapped, declarative_base, mapped_column, relationship
 from sqlalchemy.orm.base import Mapped
 
-Base = declarative_base()
+
 db = SQLAlchemy()
+Base = db.Model
 
 
 class Users(Base):
