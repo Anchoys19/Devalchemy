@@ -1,11 +1,13 @@
 from typing import List
 
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import CheckConstraint, Column, DECIMAL, ForeignKeyConstraint, Index, Integer, String, VARBINARY
 from sqlalchemy.dialects.mysql import BIT
 from sqlalchemy.orm import Mapped, declarative_base, mapped_column, relationship
 from sqlalchemy.orm.base import Mapped
 
 Base = declarative_base()
+db = SQLAlchemy()
 
 
 class Users(Base):

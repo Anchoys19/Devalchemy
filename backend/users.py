@@ -90,7 +90,7 @@ def google_auth():
         # Generate JWT token for authentication
         access_token = create_access_token(identity=user.id)
 
-        return jsonify({"message": "Login successful", "access_token": access_token, "user": {"email": user.email, "name": user.name}}), 201
+        return jsonify({"message": "Login successful", "access_token": access_token, "user": user_to_dict(user)}), 201
 
     except Exception as e:
         return jsonify({"error": "Invalid Google token"}), 401
@@ -125,7 +125,7 @@ def signup():
     return jsonify({
         "message": "User created successfully",
         "access_token": access_token,
-        "user": {"email": new_user.email, "nickname": new_user.nickname}
+        "user": user_to_dict(new_user)
     }), 201
 
 
