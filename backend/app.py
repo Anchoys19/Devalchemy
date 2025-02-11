@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from models import db  # Import db from models.py
 import os
+from users import users_bp
 
 
 def create_app():
@@ -14,6 +15,8 @@ def create_app():
 
     with app.app_context():
         db.create_all()  # Create tables if they don't already exist
+
+    app.register_blueprint(users_bp)
 
     @app.route('/')
     def index():

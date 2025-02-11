@@ -1,18 +1,19 @@
 from typing import List
 
 from sqlalchemy import CheckConstraint, Column, DECIMAL, ForeignKeyConstraint, Index, Integer, String, VARBINARY
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.mysql import BIT
 from sqlalchemy.orm import Mapped, declarative_base, mapped_column, relationship
 from sqlalchemy.orm.base import Mapped
 
-
-db = SQLAlchemy()
 Base = declarative_base()
 
 
 class Users(Base):
     __tablename__ = 'users'
+    __table_args__ = (
+        Index('email_UNIQUE', 'email', unique=True),
+        Index('nickname_UNIQUE', 'nickname', unique=True)
+    )
 
     id = mapped_column(Integer, primary_key=True)
     nickname = mapped_column(String(255), nullable=False)
@@ -85,6 +86,7 @@ class PassedQuests(Base):
     id = mapped_column(Integer, primary_key=True)
     id_quest = mapped_column(Integer, nullable=False)
     id_user = mapped_column(Integer, nullable=False)
+    time_used = mapped_column(DECIMAL(5, 2))
 
     quests: Mapped['Quests'] = relationship(
         'Quests', back_populates='passedquests')
