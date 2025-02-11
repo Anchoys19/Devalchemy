@@ -8,20 +8,31 @@ const NewQuest = () => {
         description: "",
         tasks: [],
         timeLimit: "",
+        numTasks: "",
       });
 
+    const [isTasksModalOpen, setTasksModalOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = (e) => {
-       const { name, value } = e.target;
-       setQuest({ ...quest, [name]: value });
-    };
+        const { name, value } = e.target;
+        setQuest({ ...quest, [name]: value });
 
-    const addTask = () => {
-        setQuest({ 
-            ...quest, 
-            tasks: [...quest.tasks, { type: "text", question: "", options: [], image: "" }] 
-        });
+        if (name === "numTasks") {
+            const numValue = Math.floor(Number(value));
+            if (!isNaN(numValue) && numValue >= 0) {
+                setQuest((prevQuest) => ({
+                    ...prevQuest,
+                    numTasks: numValue,
+                    tasks: Array.from({ length: numValue }, () => ({ type: "text", question: "", options: [] }))
+                }));
+            }
+        } else {
+            setQuest((prevQuest) => ({
+                ...prevQuest,
+                [name]: value
+            }));
+        }
     };
 
     const handleTaskChange = (index, key, value) => {
@@ -51,16 +62,6 @@ const NewQuest = () => {
         setQuest({ ...quest, tasks: updatedTasks });
     };
 
-    const handleImageUpload = (index, file) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            handleTaskChange(index, "image", reader.result);
-        };
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Quest created:", quest);
@@ -68,90 +69,63 @@ const NewQuest = () => {
     };
 
     return (
-      <div className="quest-overlay">
-          <div className="quest-container">
-              <div className="quest-title-container">
-                  <div className="quest-line"></div>
-                  <h2 className="quest-title">Create a New Quest</h2>
-                  <div className="quest-line"></div>
-              </div>
-              <form onSubmit={handleSubmit}>
-                  <input
-                      type="text"
-                      name="title"
-                      placeholder="Quest Title"
-                      value={quest.title}
-                      onChange={handleInputChange}
-                      required
-                  />
-                  <textarea
-                      name="description"
-                      placeholder="Quest Description"
-                      value={quest.description}
-                      onChange={handleInputChange}
-                      required
-                  />
-                  <input
-                      type="number"
-                      name="timeLimit"
-                      placeholder="Time Limit (minutes)"
-                      value={quest.timeLimit}
-                      onChange={handleInputChange}
-                  />
-                  <button type="button" className="quest-btn" onClick={addTask}>Add Task</button>
+        <div className="quest-modal">
+            <div className="quest-content">
+                <h2>New Quest</h2>
+                <form onSubmit={handleSubmit}>
+                <div className="quest-row">
+                        <div className="left">
+                            <input type="text" name="title" placeholder="Quest Title" value={quest.title} onChange={handleInputChange} required />
+                        </div>
+                        <div className="right">
+                            <textarea name="description" placeholder="Quest Description" value={quest.description} onChange={handleInputChange} required />
+                        </div>
+                    </div>
+                    <div className="quest-row">
+                        <div className="left">
+                            <input type="number" name="numTasks" placeholder="Number of Tasks" value={quest.numTasks} onChange={handleInputChange} required min="1" step="1" />
+                            {quest.numTasks > 0 && (
+                                <button type="button" className="edit-tasks-btn" onClick={() => setTasksModalOpen(true)}>
+                                    Edit Tasks
+                                </button>
+                            )}
+                        </div>
+                        <div className="right">
+                            <input type="number" name="timeLimit" placeholder="Time Limit (minutes)" value={quest.timeLimit} onChange={handleInputChange} />
+                        </div>
+                    </div>
 
-                  {quest.tasks.map((task, index) => (
-                      <div key={index} className="task">
-                          <select
-                              value={task.type}
-                              onChange={(e) => handleTaskChange(index, "type", e.target.value)}
-                          >
-                              <option value="text">Open-ended</option>
-                              <option value="multiple-choice">Multiple Choice</option>
-                              <option value="image-search">Image Search</option>
-                          </select>
-                          <input
-                              type="text"
-                              placeholder="Task Question"
-                              value={task.question}
-                              onChange={(e) => handleTaskChange(index, "question", e.target.value)}
-                          />
-                          {task.type === "multiple-choice" && (
-                              <div className="options">
-                                  {task.options.map((option, optionIndex) => (
-                                      <input
-                                          key={optionIndex}
-                                          type="text"
-                                          placeholder={`Option ${optionIndex + 1}`}
-                                          value={option}
-                                          onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
-                                      />
-                                  ))}
-                                  <button type="button" className="quest-btn" onClick={() => addOption(index)}>Add Option</button>
-                              </div>
-                          )}
+                    <button type="submit" className="create-quest-btn">Create Quest</button>
+                </form>
+            </div>
 
-                          {task.type === "image-search" && (
-                              <div className="image-upload">
-                                  <input
-                                      type="file"
-                                      accept="image/*"
-                                      onChange={(e) => handleImageUpload(index, e.target.files[0])}
-                                  />
-                                  {task.image && <img src={task.image} alt="Uploaded Task" width="100px" />}
-                              </div>
-                          )}
-                      </div>
-                  ))}
-
-                  <button type="submit" className="quest-btn">Save Quest</button>
-              </form>
-              <button className="go-back-btn" onClick={() => navigate(-1)}>
-              <span className="arrow-icon">← Go Back</span>
-              </button>
-          </div>
-      </div>
-  );
+            {isTasksModalOpen && (
+                <div className="tasks-modal">
+                    <div className="tasks-modal-content">
+                        <h2>Edit Tasks</h2>
+                        {quest.tasks.map((task, index) => (
+                            <div key={index} className="task">
+                                <select value={task.type} onChange={(e) => handleTaskChange(index, "type", e.target.value)}>
+                                    <option value="text">Open-ended</option>
+                                    <option value="multiple-choice">Multiple Choice</option>
+                                </select>
+                                <input type="text" placeholder="Task Question" value={task.question} onChange={(e) => handleTaskChange(index, "question", e.target.value)} />
+                                {task.type === "multiple-choice" && (
+                                    <div className="options">
+                                        {task.options.map((option, optionIndex) => (
+                                            <input key={optionIndex} type="text" placeholder={`Option ${optionIndex + 1}`} value={option} onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)} />
+                                        ))}
+                                        <button type="button" onClick={() => addOption(index)}>Add Option</button>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                        <button type="button" onClick={() => setTasksModalOpen(false)}>Save Changes</button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default NewQuest;
