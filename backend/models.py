@@ -21,7 +21,7 @@ class Users(Base):
     id = mapped_column(Integer, primary_key=True)
     nickname = mapped_column(String(255), nullable=False)
     email = mapped_column(String(255), nullable=False)
-    password_hash = mapped_column(VARBINARY(255))
+    password_hash = mapped_column(String(255))
     gender = mapped_column(String(15))
     phone_number = mapped_column(String(15))
     profile_pic_ref = mapped_column(String(255))

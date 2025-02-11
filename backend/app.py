@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from models import db  # Import db from models.py
 import os
 from users import users_bp
@@ -11,7 +12,8 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
-    CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
+    CORS(app, resources={
+         r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
     with app.app_context():
         db.create_all()  # Create tables if they don't already exist
@@ -21,7 +23,7 @@ def create_app():
     @app.route('/')
     def index():
         return "Welcome to the Quest API!"
-
+    jwt = JWTManager(app)
     return app
 
 
