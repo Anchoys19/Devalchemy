@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 const Register = () => {
     const [formValues, setFormValues] = useState({
-        firstName: "",
-        lastName: "",
+        nickName: "",
         email: "",
         password: "",
     });
 
     const [submitted, setSubmitted] = useState(false);
     const [valid, setValid] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const navigate = useNavigate();
 
@@ -23,17 +23,67 @@ const Register = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (formValues.firstName && formValues.lastName && formValues.email && formValues.password) {
-            setValid(true);
-            navigate("/");
-        }
         setSubmitted(true);
+
+        if (!formValues.nickName || !formValues.email || !formValues.password) {
+            setValid(false);
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nickname: formValues.nickName,
+                    email: formValues.email,
+                    password: formValues.password,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setValid(true);
+                localStorage.setItem("jwt", data.access_token);
+                console.log("Successful registration: ", data);
+                navigate("/");
+            } else {
+                setErrorMessage(data.message || "Registration error");
+            } 
+        } catch (error) {
+            setErrorMessage("Server connection error");
+            console.error("Request error:", error);
+            }
     };
 
-    const handleSocialLogin = (platform) => {
-        console.log(`Registration via ${platform}`);
+    const handleGoogleLogin = async () => {
+        try {
+            const auth2 = window.gapi.auth2.getAuthInstance();
+            const googleUser = await auth2.signIn();
+            const id_token = googleUser.getAuthResponse().id_token;
+
+            const response = await fetch("http://localhost:5000/auth/google", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token: id_token }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem("jwt", data.access_token);
+                navigate("/");
+            } else {
+                setErrorMessage(data.message || "Google login error");
+            }
+        } catch (error) {
+            setErrorMessage("Google login error");
+            console.error("Google login error:", error);
+        }
     };
 
     return (
@@ -54,25 +104,13 @@ const Register = () => {
                         <input
                             className="form-field"
                             type="text"
-                            placeholder="First Name"
-                            name="firstName"
-                            value={formValues.firstName}
+                            placeholder="NickName"
+                            name="nickName"
+                            value={formValues.nickName}
                             onChange={handleInputChange}
                         />
-                        {submitted && !formValues.firstName && (
+                        {submitted && !formValues.nickName && (
                             <span className="error-message">Please enter a first name</span>
-                        )}
-
-                        <input
-                            className="form-field"
-                            type="text"
-                            placeholder="Last Name"
-                            name="lastName"
-                            value={formValues.lastName}
-                            onChange={handleInputChange}
-                        />
-                        {submitted && !formValues.lastName && (
-                            <span className="error-message">Please enter a last name</span>
                         )}
 
                         <input
