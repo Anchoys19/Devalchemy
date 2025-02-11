@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, request, abort
-from app import db
-from models import Users, SocialMediaAccount, QuestReviews
+from models import Users, SocialMediaAccount, QuestReviews, db
 from passlib.hash import argon2
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -152,7 +151,7 @@ def login():
 
 
 # PUT (update) current user
-@users_bp.route('/users/', methods=['PUT'])
+@users_bp.route('/users', methods=['PUT'], endpoint='update_user')
 @jwt_required
 def update_user():
     user_id = get_jwt_identity()
@@ -178,7 +177,7 @@ def update_user():
 
 
 # DELETE current user
-@users_bp.route('/users/', methods=['DELETE'])
+@users_bp.route('/users', methods=['DELETE'], endpoint='delete_user')
 @jwt_required
 def delete_user():
     user_id = get_jwt_identity()
