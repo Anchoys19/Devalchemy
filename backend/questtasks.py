@@ -1,68 +1,60 @@
 from flask import Blueprint, abort, request, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from models import db, Quests, QuestReviews, QuestTasks, QuestTaskTestOptions, PassedQuests, PassedQuestTasks
+from models import db, QuestTasks, QuestTasks
 
-quest_tasks_bp = Blueprint('quests', __name__)
+quest_tasks_bp = Blueprint('quest_tasks', __name__)
 
 
-def quest_to_dict(quest: Quests) -> dict:
-    """Utility function to convert a Quests object to a dictionary"""
-    # TODO: add ratings,quests?
+def quest_task_to_dict(quest_task: QuestTasks) -> dict:
+    """Utility function to convert a QuestTasks object to a dictionary"""
     return {
-        'id': quest.id,
-        'id_user_author': quest.id_user_author,
-        'name': quest.name,
-        'description': quest.description,
-        'time_restriction': quest.time_restriction,
+        'id': quest_task.id,
+        'id_quest': quest_task.id_quest,
+        'name': quest_task.name,
+        'description': quest_task.description,
+        'media_ref': quest_task.time_restriction,
+        'scoring_max': quest_task.scoring_max,
     }
 
 
-def dict_to_quest(data: dict, user_id) -> Quests:
-    """Utility function to convert a dictionary to a Quests object"""
-    return Quests(
-        id_user_author=user_id,
+def dict_to_quest_task(data: dict) -> QuestTasks:
+    """Utility function to convert a dictionary to a QuestTasks object"""
+    return QuestTasks(
+        id_quest=data.get("id_quest"),
         name=data.get('name'),
         description=data.get('description', None),
-        time_restriction=data.get('time_restriction', None)
+        media_ref=data.get('media_ref', None),
+        scoring_max=data.get('scoring_max', None)
     )
 
 
-@quests_bp.route('/quests', methods=['GET'])
-def get_quests():
-    quests = Quests.query.all()
-    quests_list = [quest_to_dict(quest) for quest in quests]
-    return jsonify(quests_list)
+@quest_tasks_bp.route('/quest_tasks', methods=['GET'])
+def get_quest_tasks():
+    quest_tasks = QuestTasks.query.all()
+    quest_tasks_list = [quest_task_to_dict(
+        quest_task) for quest_task in quest_tasks]
+    return jsonify(quest_tasks_list)
 
 
-@quests_bp.route('/quests/user/', methods=['GET'])
-@jwt_required
-def get_quests_by_current_user():
-    user_id = get_jwt_identity()
-    quests = Quests.query.filter_by(id_user_author=user_id)
-    if not quests:
-        abort(404, description="User doesn't have quests")
-    quests_list = [quest_to_dict(quest) for quest in quests]
-    return jsonify(quests_list)
+@quest_tasks_bp.route('/quests/<int:quest_id>/quest_tasks/', methods=['GET'])
+def get_quest_tasks_by_quest(quest_id):
+    quest_tasks = QuestTasks.query.filter_by(id_quest=quest_id)
+    if not quest_tasks:
+        return jsonify([])
+    quest_tasks_list = [quest_task_to_dict(
+        quest_task) for quest_task in quest_tasks]
+    return jsonify(quest_tasks_list)
 
 
-@quests_bp.route('/quests/user/<int:user_id>', methods=['GET'])
-def get_quests_by_user(user_id):
-    quests = Quests.query.filter_by(id_user_author=user_id)
-    if not quests:
-        abort(404, description="User doesn't have quests")
-    quests_list = [quest_to_dict(quest) for quest in quests]
-    return jsonify(quests_list)
-
-
-@quests_bp.route('/quests/<int:quest_id>', methods=['GET'])
-def get_quest(quest_id):
-    quest = Quests.query.get(quest_id)
-    if not quest:
+@quest_tasks_bp.route('/quest_tasks/<int:quest_task_id>', methods=['GET'])
+def get_quest_task(quest_task_id):
+    quest_task = QuestTasks.query.get(quest_task_id)
+    if not quest_task:
         abort(404, description="Quest not found")
-    return jsonify(quest_to_dict(quest))
+    return jsonify(quest_task_to_dict(quest_task))
 
 
-@quests_bp.route('/quests', methods=['POST'], endpoint="create_quest")
+@quest_tasks_bp.route('/quest_tasks', methods=['POST'], endpoint="create_quest")
 @jwt_required
 def create_quest():
     user_id = get_jwt_identity()
@@ -71,46 +63,46 @@ def create_quest():
 
     if not data or 'name' not in data:
         abort(400, description="Missing required field: name")
-    new_quest = dict_to_quest(data, user_id)
+    new_quest = dict_to_quest_task(data, user_id)
     db.session.add(new_quest)
     db.session.commit()
-    return jsonify({"message": "Quest created successfully", "quest": quest_to_dict(new_quest)}), 201
+    return jsonify({"message": "Quest created successfully", "quest_task": quest_task_to_dict(new_quest)}), 201
 
 
-@quests_bp.route('/quests/<int:quest_id>', methods=['PUT'], endpoint="update_quest")
+@quest_tasks_bp.route('/quest_tasks/<int:quest_id>', methods=['PUT'], endpoint="update_quest")
 @jwt_required
 def update_quest(quest_id):
     user_id = get_jwt_identity()
-    quest = Quests.query.get(quest_id)
+    quest_task = QuestTasks.query.get(quest_id)
 
-    if not quest:
+    if not quest_task:
         abort(404, description="Quest not found.")
 
-    if not quest.id_user_author == user_id:
-        abort(403, description="You can only edit your own quests.")
+    if not quest_task.id_user_author == user_id:
+        abort(403, description="You can only edit your own quest_tasks.")
     data = request.get_json()
 
-    quest.name = data.get('name', quest.name)
-    quest.description = data.get('description', quest.description),
-    quest.time_restriction = data.get(
-        'time_restriction', quest.time_restriction)
+    quest_task.name = data.get('name', quest_task.name)
+    quest_task.description = data.get('description', quest_task.description),
+    quest_task.time_restriction = data.get(
+        'time_restriction', quest_task.time_restriction)
 
     db.session.commit()
-    return jsonify({'message': 'Quest updated successfully', 'quest': quest_to_dict(quest)}), 200
+    return jsonify({'message': 'Quest updated successfully', 'quest_task': quest_task_to_dict(quest_task)}), 200
 
 
-@quests_bp.route('/quests/<int:quest_id>', methods=['DELETE'], endpoint="delete_quest")
+@quest_tasks_bp.route('/quest_tasks/<int:quest_id>', methods=['DELETE'], endpoint="delete_quest")
 @jwt_required
 def delete_quest(quest_id):
     user_id = get_jwt_identity()
-    quest = Quests.query.get(quest_id)
+    quest_task = QuestTasks.query.get(quest_id)
 
-    if not quest:
+    if not quest_task:
         abort(404, description="Quest not found.")
 
-    if not quest.id_user_author == user_id:
-        abort(403, description="You can only delete your own quests.")
+    if not quest_task.id_user_author == user_id:
+        abort(403, description="You can only delete your own quest_tasks.")
 
-    db.session.delete(quest)
+    db.session.delete(quest_task)
     db.session.commit()
     return jsonify({'message': 'Quest deleted successfully'}), 200

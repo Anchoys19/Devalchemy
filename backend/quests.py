@@ -7,7 +7,6 @@ quests_bp = Blueprint('quests', __name__)
 
 def quest_to_dict(quest: Quests) -> dict:
     """Utility function to convert a Quests object to a dictionary"""
-    # TODO: add ratings,quests?
     return {
         'id': quest.id,
         'id_user_author': quest.id_user_author,
@@ -34,7 +33,7 @@ def get_quests():
     return jsonify(quests_list)
 
 
-@quests_bp.route('/quests/user/', methods=['GET'])
+@quests_bp.route('/user/quests/', methods=['GET'])
 @jwt_required
 def get_quests_by_current_user():
     user_id = get_jwt_identity()
@@ -45,7 +44,7 @@ def get_quests_by_current_user():
     return jsonify(quests_list)
 
 
-@quests_bp.route('/quests/user/<int:user_id>', methods=['GET'])
+@quests_bp.route('/users/<int:user_id>/quests/', methods=['GET'])
 def get_quests_by_user(user_id):
     quests = Quests.query.filter_by(id_user_author=user_id)
     if not quests:
