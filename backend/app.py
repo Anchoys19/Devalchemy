@@ -8,6 +8,7 @@ from quests import quests_bp
 from quest_tasks import quest_tasks_bp
 from quest_reviews import quest_reviews_bp
 from quest_task_test_options import quest_task_test_options_bp
+from passed_quests import passed_quests_bp
 
 
 def create_app():
@@ -26,6 +27,7 @@ def create_app():
     app.register_blueprint(quest_tasks_bp)
     app.register_blueprint(quest_reviews_bp)
     app.register_blueprint(quest_task_test_options_bp)
+    app.register_blueprint(passed_quests_bp)
 
     @app.route('/')
     def index():

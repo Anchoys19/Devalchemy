@@ -39,7 +39,7 @@ def get_quests_by_current_user():
     user_id = get_jwt_identity()
     quests = Quests.query.filter_by(id_user_author=user_id)
     if not quests:
-        abort(404, description="User doesn't have quests")
+        return jsonify([])
     quests_list = [quest_to_dict(quest) for quest in quests]
     return jsonify(quests_list)
 
@@ -48,7 +48,7 @@ def get_quests_by_current_user():
 def get_quests_by_user(user_id):
     quests = Quests.query.filter_by(id_user_author=user_id)
     if not quests:
-        abort(404, description="User doesn't have quests")
+        return jsonify([])
     quests_list = [quest_to_dict(quest) for quest in quests]
     return jsonify(quests_list)
 
@@ -65,7 +65,6 @@ def get_quest(quest_id):
 @jwt_required()
 def create_quest():
     user_id = get_jwt_identity()
-    print("User ID from JWT:", user_id)
     data = request.get_json()
 
     if not data or 'name' not in data:
