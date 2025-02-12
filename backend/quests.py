@@ -65,7 +65,7 @@ def get_quest(quest_id):
 @jwt_required()
 def create_quest():
     user_id = get_jwt_identity()
-
+    print("User ID from JWT:", user_id)
     data = request.get_json()
 
     if not data or 'name' not in data:
