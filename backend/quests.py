@@ -34,7 +34,7 @@ def get_quests():
 
 
 @quests_bp.route('/user/quests/', methods=['GET'])
-@jwt_required
+@jwt_required()
 def get_quests_by_current_user():
     user_id = get_jwt_identity()
     quests = Quests.query.filter_by(id_user_author=user_id)
@@ -77,7 +77,7 @@ def create_quest():
 
 
 @quests_bp.route('/quests/<int:quest_id>', methods=['PUT'], endpoint="update_quest")
-@jwt_required
+@jwt_required()
 def update_quest(quest_id):
     user_id = get_jwt_identity()
     quest = Quests.query.get(quest_id)
@@ -99,7 +99,7 @@ def update_quest(quest_id):
 
 
 @quests_bp.route('/quests/<int:quest_id>', methods=['DELETE'], endpoint="delete_quest")
-@jwt_required
+@jwt_required()
 def delete_quest(quest_id):
     user_id = get_jwt_identity()
     quest = Quests.query.get(quest_id)

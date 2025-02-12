@@ -152,7 +152,7 @@ def login():
 
 # PUT (update) current user
 @users_bp.route('/users', methods=['PUT'], endpoint='update_user')
-@jwt_required
+@jwt_required()
 def update_user():
     user_id = get_jwt_identity()
     user = Users.query.get(user_id)  # Get the user by id
@@ -178,7 +178,7 @@ def update_user():
 
 # DELETE current user
 @users_bp.route('/users', methods=['DELETE'], endpoint='delete_user')
-@jwt_required
+@jwt_required()
 def delete_user():
     user_id = get_jwt_identity()
     user = Users.query.get(user_id)  # Get the user by id

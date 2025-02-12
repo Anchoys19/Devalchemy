@@ -5,6 +5,7 @@ from models import db  # Import db from models.py
 import os
 from users import users_bp
 from quests import quests_bp
+from quest_tasks import quest_tasks_bp
 
 
 def create_app():
@@ -20,6 +21,7 @@ def create_app():
 
     app.register_blueprint(users_bp)
     app.register_blueprint(quests_bp)
+    app.register_blueprint(quest_tasks_bp)
 
     @app.route('/')
     def index():
