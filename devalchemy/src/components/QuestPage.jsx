@@ -1,25 +1,40 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import "../css/QuestPage.css"
-
-const quests = [
-    { id: 1, title: "Quest 1", timeLimit: 600, tasks: [
-            { id: 1, type: "choice", question: "Choose the right answer:", options: ["A", "B", "C"], correct: "A" },
-            { id: 2, type: "text", question: "Describe your experience:" }
-        ]},
-    { id: 2, title: "Quest 2", timeLimit: 900, tasks: [
-            { id: 1, type: "choice", question: "Select a color:", options: ["Red", "Green", "Blue"], correct: "Green" },
-            { id: 2, type: "text", question: "Write about your favorite color:" }
-        ]}
-];
+import { useParams, useNavigate } from "react-router-dom";
+import "../css/QuestPage.css";
 
 function QuestPage() {
     const { id } = useParams();
-    const quest = quests.find(q => q.id === parseInt(id));
+    const [quest, setQuest] = useState(null);
+    const [tasks, setTasks] = useState([]);
     const [progress, setProgress] = useState(0);
-    const [timeLeft, setTimeLeft] = useState(quest?.timeLimit || 0);
+    const [timeLeft, setTimeLeft] = useState(0);
     const [answers, setAnswers] = useState({});
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetch(`http://127.0.0.1:5000/quests/${id}/quest_tasks/`)
+            .then(res => res.json())
+            .then(data => {
+                setTasks(data);
+                if (data.length > 0) {
+                    setTimeLeft(data[0].time_limit || 0);
+                }
+            });
+    }, [id]);
+
+    useEffect(() => {
+        if (tasks.length > 0) {
+            const fetchOptions = async () => {
+                const updatedTasks = await Promise.all(tasks.map(async task => {
+                    const response = await fetch(`http://127.0.0.1:5000/quests_tasks/${task.id}/quest_task_test_options/`);
+                    const options = await response.json();
+                    return { ...task, options };
+                }));
+                setTasks(updatedTasks);
+            };
+            fetchOptions();
+        }
+    }, [tasks]);
 
     useEffect(() => {
         const interval = setInterval(() => setTimeLeft(t => Math.max(0, t - 1)), 1000);
@@ -29,14 +44,14 @@ function QuestPage() {
     const handleAnswer = (taskId, answer) => {
         setAnswers(prev => {
             const updated = { ...prev, [taskId]: answer };
-            setProgress((Object.keys(updated).length / quest.tasks.length) * 100);
+            setProgress((Object.keys(updated).length / tasks.length) * 100);
             return updated;
         });
     };
 
     return (
         <div className="quest-container">
-            <h1 className="quest-title">{quest?.title}</h1>
+            <h1 className="quest-title">Quest {id}</h1>
             <div className="quest-info">
                 <p>Time left: {timeLeft}s</p>
                 <p>Progress: {progress.toFixed(2)}%</p>
@@ -45,19 +60,22 @@ function QuestPage() {
             <div className="cont">
                 <nav className="quest-nav">
                     <h2 className="task-nav">Tasks</h2>
-                    {quest.tasks.map(task => (
+                    {tasks.map(task => (
                         <button key={task.id} className="task-nav" onClick={() => document.getElementById(`task-${task.id}`).scrollIntoView()}>Task {task.id}</button>
                     ))}
                 </nav>
 
                 <div className="tasks-container">
-                    {quest.tasks.map(task => (
+                    {tasks.map(task => (
                         <div key={task.id} id={`task-${task.id}`} className="task-box">
-                            <h3 className="font-semibold">{task.question}</h3>
-                            {task.type === "choice" ? (
+                            <h3 className="font-semibold">{task.name}</h3>
+                            <p>{task.description}</p>
+                            {task.options && task.options.length > 0 ? (
                                 <div>
                                     {task.options.map(option => (
-                                        <button key={option} className="option-button" onClick={() => handleAnswer(task.id, option)}>{option}</button>
+                                        <button key={option.id} className="option-button" onClick={() => handleAnswer(task.id, option.option_text)}>
+                                            {option.option_text}
+                                        </button>
                                     ))}
                                 </div>
                             ) : (
