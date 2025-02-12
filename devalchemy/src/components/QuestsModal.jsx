@@ -22,7 +22,7 @@ const QuestsModal = ({ onClose }) => {
         <button className="modal-btn" onClick={() => navigate("/my-quests")}>
           My Quests
         </button>
-        <button className="modal-btn" onClick={() => navigate("/completed-quests")}>
+        <button className="modal-btn" onClick={() => navigate("/quests")}>
           Completed Quests
         </button>
         <button className="modal-btn" onClick={handleNewQuest}>
