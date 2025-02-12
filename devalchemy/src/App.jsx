@@ -14,6 +14,7 @@ import Welcome from "./components/Welcome";
 import AllQuests from "./components/AllQuests";
 import QuestPage from "./components/QuestPage";
 import RateQuest from "./components/RateQuest";
+import Rating from "./components/Rating";
 import "./App.css";
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
 				<Route path="/signin" element={<SignIn />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/quests" element={<AllQuests />} />
+				<Route path="/rating" element={<Rating />} />
 				<Route path="/quests/:id" element={<QuestPage />} />
 				<Route path="/new-quest" element={<NewQuest />} />
 				<Route path="/rate/:id" element={<RateQuest />} />

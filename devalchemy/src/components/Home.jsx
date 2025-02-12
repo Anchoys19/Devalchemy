@@ -22,6 +22,9 @@ const Home = () => {
           <button className="menu-btn" onClick={() => setIsModalOpen(true)}>
             Quests
           </button>
+          <button className="menu-btn" onClick={() => navigate("/rating")}>
+            Rating
+          </button>
         </div>
       </div>
       <button className="sign-in-btn" onClick={() => navigate("/signin")}>
