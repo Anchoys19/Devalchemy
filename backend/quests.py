@@ -62,7 +62,7 @@ def get_quest(quest_id):
 
 
 @quests_bp.route('/quests', methods=['POST'], endpoint="create_quest")
-@jwt_required
+@jwt_required()
 def create_quest():
     user_id = get_jwt_identity()
 
