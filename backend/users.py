@@ -87,7 +87,7 @@ def google_auth():
             db.session.commit()
 
         # Generate JWT token for authentication
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
 
         return jsonify({"message": "Login successful", "access_token": access_token, "user": user_to_dict(user)}), 201
 
@@ -119,7 +119,7 @@ def signup():
     db.session.commit()
 
     # Generate JWT token (auto-login)
-    access_token = create_access_token(identity=new_user.id)
+    access_token = create_access_token(identity=str(new_user.id))
 
     return jsonify({
         "message": "User created successfully",
@@ -141,7 +141,7 @@ def login():
         abort(401, description="Invalid email or password")
 
     # Generate JWT token for authentication
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
 
     return jsonify({
         "message": "Login successful",
