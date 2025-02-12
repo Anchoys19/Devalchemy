@@ -106,7 +106,7 @@ def delete_quest_task(quest_task_id):
     quest_task = QuestTasks.query.get(quest_task_id)
     quest = quest_task.quests
     if not quest_task:
-        abort(404, description="Quest not found.")
+        abort(404, description="QuestTask not found.")
 
     if not quest.id_user_author == user_id:
         abort(403, description="You can only delete your own quest tasks.")
