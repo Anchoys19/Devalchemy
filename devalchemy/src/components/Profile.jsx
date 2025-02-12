@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/Profile.css"
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ const Profile = () => {
                         {user.quests.map((quest) => (
                             <li key={quest.id}>
                                 <span className="quest-title">{quest.name}</span>
-                                <span className="quest-status">{quest.description}</span>
+                                <span className="quest-description">{quest.description}</span>
                             </li>
                         ))}
                     </ul>
