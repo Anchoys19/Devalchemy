@@ -13,14 +13,15 @@ Web platform that allows users create, manage and complete quests with interacti
 
 
 ## Deployment
-
-To deploy this project run
+Make sure you have Docker installed and docker engine running. 
+CD to the directory you installed this repository and run:
 
 ```bash
-  npm run dev
+  docker-compose up --build
 ```
 
-
+If you have mysql server installed, please go to task manager and stop all mysql processes, just so the port 3306 is not occupied. 
+If backend returns 1 on launch, just restart the backend (not entire project) in Docker and it should work.
 ## Features
 
 - Live previews
@@ -30,12 +31,7 @@ To deploy this project run
 
 ## Installation
 
-Install Devalchemy with npm
-
-```bash
-  npm install Devalchemy
-  cd Devalchemy
-```
+Install Devalchemy from our GitHub repository.
     
 ## Lessons Learned
 
