@@ -60,37 +60,37 @@ const Register = () => {
 		}
 	};
 
-	const handleGoogleLogin = async (googleUser) => {
-		var profile = googleUser.getBasicProfile();
-		var id_token = googleUser.getAuthResponse().id_token;
+	// const handleGoogleLogin = async (googleUser) => {
+	// 	var profile = googleUser.getBasicProfile();
+	// 	var id_token = googleUser.getAuthResponse().id_token;
+	// 	console.log("google log");
+	// 	try {
+	// 		const response = await fetch("http://localhost:5000/auth/google", {
+	// 			method: "POST",
+	// 			headers: { "Content-Type": "application/json" },
+	// 			body: JSON.stringify({ token: id_token }),
+	// 		});
 
-		try {
-			const response = await fetch("http://localhost:5000/auth/google", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ token: id_token }),
-			});
-
-			const data = await response.json();
-			if (response.ok) {
-				localStorage.setItem("jwt", data.access_token);
-				navigate("/");
-			} else {
-				setErrorMessage(data.error || "Google login error");
-			}
-			setSubmitted(true);
-		} catch (error) {
-			setErrorMessage("Google login failed");
-			console.error("Google login error:", error);
-		}
-	};
+	// 		const data = await response.json();
+	// 		if (response.ok) {
+	// 			localStorage.setItem("jwt", data.access_token);
+	// 			navigate("/");
+	// 		} else {
+	// 			setErrorMessage(data.error || "Google login error");
+	// 		}
+	// 		setSubmitted(true);
+	// 	} catch (error) {
+	// 		setErrorMessage("Google login failed");
+	// 		console.error("Google login error:", error);
+	// 	}
+	// };
 
 	return (
 		<div className="modal">
-			<meta
+			{/* <meta
 				name="google-signin-client_id"
 				content="559203323210-iajpj3pu9kjibqmmec31le6m82oo7vp9.apps.googleusercontent.com"
-			></meta>
+			></meta> */}
 			<div className="modal-content">
 				<span className="close-btn" onClick={() => navigate("/")}>
 					×
@@ -162,12 +162,16 @@ const Register = () => {
 				</form>
 
 				<div className="social-login">
-					<button
-						className="social-btn google-btn g-signin2"
-						onClick={handleGoogleLogin}
-					>
-						Register with Google
-					</button>
+					<div
+						id="g_id_onload"
+						data-client_id="559203323210-iajpj3pu9kjibqmmec31le6m82oo7vp9.apps.googleusercontent.com"
+						data-ux_mode="redirect"
+						data-login_uri="http://localhost:5000/auth/google"
+					></div>
+					<div
+						className="g_id_signin social-btn"
+						data-type="standard"
+					></div>
 				</div>
 
 				{errorMessage && (
@@ -179,11 +183,6 @@ const Register = () => {
 					<span onClick={() => navigate("/signin")}>Sign In</span>
 				</div>
 			</div>
-			<script
-				src="https://apis.google.com/js/platform.js"
-				async
-				defer
-			></script>
 		</div>
 	);
 };

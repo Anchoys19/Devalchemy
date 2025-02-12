@@ -61,7 +61,7 @@ def get_user(id):
 def google_auth():
     data = request.json
     token = data.get("token")
-
+    print('back request')
     if not token:
         return jsonify({"error": "No token provided"}), 400
 
