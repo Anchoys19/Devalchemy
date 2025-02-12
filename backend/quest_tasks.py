@@ -114,3 +114,23 @@ def delete_quest_task(quest_task_id):
     db.session.delete(quest_task)
     db.session.commit()
     return jsonify({'message': 'QuestTask deleted successfully'}), 200
+
+
+@quest_tasks_bp.route('/quests/<int:quest_id>/quest_tasks', methods=['DELETE'], endpoint="delete_quest_tasks_by_quest")
+@jwt_required()
+def delete_quest_tasks_by_quest(quest_id):
+    user_id = get_jwt_identity()
+    quest = Quests.query.get(
+        quest_id)
+
+    if not quest:
+        abort(404, description="Quest not found.")
+
+    if not quest.id_user_author == user_id:
+        abort(403, description="You can only delete your own quest tasks.")
+
+    quest_tasks = quest.questtasks
+    for quest_task in quest_tasks:
+        db.session.delete(quest_task)
+    db.session.commit()
+    return jsonify({'message': 'QuestTasks deleted successfully'}), 200

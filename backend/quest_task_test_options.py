@@ -117,7 +117,7 @@ def delete_quest_task_test_option(quest_task_test_option_id):
     return jsonify({'message': 'QuestTaskTestOption deleted successfully'}), 200
 
 
-@quest_task_test_options_bp.route('/quest_task/<int:quest_task_id>/quest_task_test_options', methods=['DELETE'], endpoint="delete_quest_task_test_options_by_quest_task")
+@quest_task_test_options_bp.route('/quest_tasks/<int:quest_task_id>/quest_task_test_options', methods=['DELETE'], endpoint="delete_quest_task_test_options_by_quest_task")
 @jwt_required()
 def delete_quest_task_test_options_by_quest(quest_task_id):
     user_id = get_jwt_identity()
