@@ -12,7 +12,7 @@ def quest_task_to_dict(quest_task: QuestTasks) -> dict:
         'id_quest': quest_task.id_quest,
         'name': quest_task.name,
         'description': quest_task.description,
-        'media_ref': quest_task.time_restriction,
+        'media_ref': quest_task.media_ref,
         'scoring_max': quest_task.scoring_max,
     }
 
