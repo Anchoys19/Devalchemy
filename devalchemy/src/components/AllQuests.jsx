@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../css/AllQuests.css"
 
 const quests = [
     { id: 1, title: "Місія в пустелі", description: "Виживіть у суворих умовах." },
@@ -9,18 +10,24 @@ const quests = [
 
 const AllQuests = () => {
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Усі квести</h1>
-            <ul>
-                {quests.map((quest) => (
-                    <li key={quest.id} className="mb-2">
-                        <Link to={`/quests/${quest.id}`} className="text-blue-500 hover:underline">
-                            {quest.title}
+        <div className="quests-container">
+            <h1 className="quests-title">All Quests</h1>
+            <ul className="quests-list">
+                {quests.map((quest, index) => (
+                    <li key={quest.id} className="quest-item">
+                        <span className="quest-number">{index + 1}</span>
+                        <div className="quest-image"></div>
+                        <div className="quest-info">
+                            <h2 className="quest-title">{quest.title}</h2>
+                            <p className="quest-description">{quest.description}</p>
+                        </div>
+                        <Link to={`/quests/${quest.id}`}>
+                            <button className="quest-complete">Play</button>
                         </Link>
                     </li>
                 ))}
             </ul>
-            <Link to="/" className="text-blue-500 mt-4 inline-block">Повернутися на головну</Link>
+            <Link to="/" className="go-back">Go Back</Link>
         </div>
     );
 };

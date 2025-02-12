@@ -1,0 +1,123 @@
+.quest-container {
+    padding: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 27px;
+    max-width: 800px;
+    margin: auto;
+    justify-content: center;
+    width: 100%;
+    border: 1px solid rgba(169, 122, 189, 0.15);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    text-align: center;
+}
+
+.quest-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.cont{
+    min-width: 450px;
+}
+
+.quest-info {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.tasks-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Меню завдань */
+.task-nav {
+    width: 25%;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.task-nav h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.task-nav button {
+    display: block;
+    background: none;
+    border: none;
+    color: #00bfff;
+    font-size: 16px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.task-nav button:hover {
+    text-decoration: underline;
+}
+
+/* Блоки завдань */
+.task-box {
+    width: 90%;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.task-box h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.option-button {
+    margin-right: 10px;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.option-button:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.text-answer {
+    width: 100%;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    border-radius: 5px;
+}
+
+.finish-button {
+    width: auto;
+    height: 53px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(90deg, #ff00ff, #6600cc);
+    box-shadow: 0px 0px 15px rgba(255, 0, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.finish-button:hover {
+    box-shadow: 0px 0px 15px rgba(255, 0, 255, 1);
+}

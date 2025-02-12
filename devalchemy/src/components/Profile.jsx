@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../css/Profile.css"
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -9,7 +10,7 @@ const Profile = () => {
         nickname: "QuestMaster42",
         email: "questmaster42@example.com",
         quests: [
-            { id: 1, name: "The Lost Treasure", description: "2024-02-10" },
+            { id: 1, name: "The Lost Treasure", description: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" },
             { id: 2, name: "Mystery of the Enchanted Forest", description: "2024-02-05" },
             { id: 3, name: "Escape from the Ancient Temple", description: "2024-01-28" },
         ],
@@ -29,7 +30,7 @@ const Profile = () => {
                         {user.quests.map((quest) => (
                             <li key={quest.id}>
                                 <span className="quest-title">{quest.name}</span>
-                                <span className="quest-status">{quest.description}</span>
+                                <span className="quest-description">{quest.description}</span>
                             </li>
                         ))}
                     </ul>

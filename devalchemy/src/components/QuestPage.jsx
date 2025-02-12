@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import "../css/QuestPage.css"
 
 const quests = [
     { id: 1, title: "Quest 1", timeLimit: 600, tasks: [
@@ -34,31 +35,33 @@ function QuestPage() {
     };
 
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold">{quest?.title}</h1>
-            <p>Time left: {timeLeft}s</p>
-            <p>Progress: {progress.toFixed(2)}%</p>
+        <div className="quest-container">
+            <h1 className="quest-title">{quest?.title}</h1>
+            <div className="quest-info">
+                <p>Time left: {timeLeft}s</p>
+                <p>Progress: {progress.toFixed(2)}%</p>
+            </div>
 
-            <div className="flex gap-4 mt-4">
-                <nav className="w-1/4 bg-gray-100 p-2">
-                    <h2 className="text-lg font-semibold">Tasks</h2>
+            <div className="cont">
+                <nav className="quest-nav">
+                    <h2 className="task-nav">Tasks</h2>
                     {quest.tasks.map(task => (
-                        <button key={task.id} className="block text-blue-500 mb-1" onClick={() => document.getElementById(`task-${task.id}`).scrollIntoView()}>Task {task.id}</button>
+                        <button key={task.id} className="task-nav" onClick={() => document.getElementById(`task-${task.id}`).scrollIntoView()}>Task {task.id}</button>
                     ))}
                 </nav>
 
-                <div className="w-3/4">
+                <div className="tasks-container">
                     {quest.tasks.map(task => (
-                        <div key={task.id} id={`task-${task.id}`} className="mb-4 p-2 border rounded">
+                        <div key={task.id} id={`task-${task.id}`} className="task-box">
                             <h3 className="font-semibold">{task.question}</h3>
                             {task.type === "choice" ? (
                                 <div>
                                     {task.options.map(option => (
-                                        <button key={option} className="mr-2 p-1 bg-gray-200" onClick={() => handleAnswer(task.id, option)}>{option}</button>
+                                        <button key={option} className="option-button" onClick={() => handleAnswer(task.id, option)}>{option}</button>
                                     ))}
                                 </div>
                             ) : (
-                                <textarea className="w-full border p-1" onBlur={(e) => handleAnswer(task.id, e.target.value)} />
+                                <textarea className="text-answer" onBlur={(e) => handleAnswer(task.id, e.target.value)} />
                             )}
                         </div>
                     ))}
@@ -66,9 +69,9 @@ function QuestPage() {
             </div>
             <button
                 onClick={() => navigate(`/rate/${id}`)}
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                className="finish-button"
             >
-                Відправити
+                Finish
             </button>
         </div>
     );

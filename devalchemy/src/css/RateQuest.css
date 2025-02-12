@@ -1,0 +1,57 @@
+.rate-quest-container {
+    padding: 50px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.rate-quest-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.rate-quest-label {
+    display: block;
+    margin-top: 15px;
+    font-size: 18px;
+    color: white;
+}
+
+.rate-quest-select, .rate-quest-textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.rate-quest-textarea {
+    min-height: 100px;
+    resize: none;
+}
+
+.rate-quest-button {
+    width: auto;
+    height: 53px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background: linear-gradient(90deg, #ff00ff, #6600cc);
+    box-shadow: 0px 0px 15px rgba(255, 0, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.rate-quest-button:hover {
+    box-shadow: 0px 0px 15px rgba(255, 0, 255, 1);
+}
