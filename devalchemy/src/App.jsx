@@ -6,6 +6,9 @@ import SignIn from "./components/SignIn"
 import Profile from "./components/Profile"
 import NewQuest from "./components/NewQuest";
 import Welcome from "./components/Welcome";
+import AllQuests from "./components/AllQuests";
+import QuestPage from "./components/QuestPage";
+
 import './App.css'
 
 function App() {
@@ -34,6 +37,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/quests" element={<AllQuests />} />
+          <Route path="/quests/:id" element={<QuestPage />} />
           <Route path="/new-quest" element={<NewQuest />} />
         </Routes>
       </Router>
