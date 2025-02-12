@@ -4,34 +4,32 @@ import "../css/NewQuest.css";
 
 const NewQuest = () => {
     const [quest, setQuest] = useState({
-        title: "",
+        name: "", 
         description: "",
         tasks: [],
-        timeLimit: "",
+        time_restriction: "", 
         numTasks: "",
-      });
+    });
 
     const [isTasksModalOpen, setTasksModalOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setQuest({ ...quest, [name]: value });
+        setQuest((prevQuest) => ({
+            ...prevQuest,
+            [name]: name === "numTasks" ? Math.max(1, Math.floor(Number(value))) || "" : value,
+        }));
 
         if (name === "numTasks") {
             const numValue = Math.floor(Number(value));
-            if (!isNaN(numValue) && numValue >= 0) {
+            if (!isNaN(numValue) && numValue > 0) {
                 setQuest((prevQuest) => ({
                     ...prevQuest,
                     numTasks: numValue,
-                    tasks: Array.from({ length: numValue }, () => ({ type: "text", question: "", options: [] }))
+                    tasks: Array.from({ length: numValue }, () => ({ type: "text", question: "", options: [] })),
                 }));
             }
-        } else {
-            setQuest((prevQuest) => ({
-                ...prevQuest,
-                [name]: value
-            }));
         }
     };
 
@@ -62,10 +60,37 @@ const NewQuest = () => {
         setQuest({ ...quest, tasks: updatedTasks });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Quest created:", quest);
-        navigate("/");
+        const token = localStorage.getItem("token");
+
+        const questData = {
+            name: quest.name, 
+            description: quest.description,
+            time_restriction: quest.time_restriction || null, 
+        };
+
+        try {
+            const response = await fetch("http://localhost:5000/quests", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(questData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log("Quest created:", data);
+                navigate("/");
+            } else {
+                console.error("Помилка при створенні квесту:", data);
+            }
+        } catch (error) {
+            console.error("Помилка сервера:", error);
+        }
     };
 
     return (
@@ -73,9 +98,9 @@ const NewQuest = () => {
             <div className="quest-content">
                 <h2>New Quest</h2>
                 <form onSubmit={handleSubmit}>
-                <div className="quest-row">
+                    <div className="quest-row">
                         <div className="left">
-                            <input type="text" name="title" placeholder="Quest Title" value={quest.title} onChange={handleInputChange} required />
+                            <input type="text" name="name" placeholder="Quest Name" value={quest.name} onChange={handleInputChange} required />
                         </div>
                         <div className="right">
                             <textarea name="description" placeholder="Quest Description" value={quest.description} onChange={handleInputChange} required />
@@ -91,7 +116,7 @@ const NewQuest = () => {
                             )}
                         </div>
                         <div className="right">
-                            <input type="number" name="timeLimit" placeholder="Time Limit (minutes)" value={quest.timeLimit} onChange={handleInputChange} />
+                            <input type="number" name="time_restriction" placeholder="Time Limit (minutes)" value={quest.time_restriction} onChange={handleInputChange} />
                         </div>
                     </div>
 

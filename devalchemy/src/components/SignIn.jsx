@@ -45,7 +45,7 @@ const SignIn = () => {
               throw new Error(data.message || "Login failed");
           }
 
-          localStorage.setItem("token", data.token);
+          localStorage.setItem("token", data.access_token);
           setValid(true);
           setTimeout(() => navigate("/"), 1000);
       } catch (error) {
