@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 const quests = [
     { id: 1, title: "Quest 1", timeLimit: 600, tasks: [
@@ -18,6 +18,7 @@ function QuestPage() {
     const [progress, setProgress] = useState(0);
     const [timeLeft, setTimeLeft] = useState(quest?.timeLimit || 0);
     const [answers, setAnswers] = useState({});
+    const navigate = useNavigate();
 
     useEffect(() => {
         const interval = setInterval(() => setTimeLeft(t => Math.max(0, t - 1)), 1000);
