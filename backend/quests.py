@@ -62,7 +62,7 @@ def get_quest(quest_id):
     return jsonify(quest_to_dict(quest))
 
 
-@quests_bp.route('/quests', methods=['POST'])
+@quests_bp.route('/quests', methods=['POST'], endpoint="create_quest")
 @jwt_required
 def create_quest():
     user_id = get_jwt_identity()
@@ -77,20 +77,40 @@ def create_quest():
     return jsonify({"message": "Quest created successfully", "quest": quest_to_dict(new_quest)}), 201
 
 
-@quests_bp.route('/quests/<int:quest_id>', methods=['PUT'])
+@quests_bp.route('/quests/<int:quest_id>', methods=['PUT'], endpoint="update_quest")
 @jwt_required
 def update_quest(quest_id):
+    user_id = get_jwt_identity()
     quest = Quests.query.get(quest_id)
+
+    if not quest:
+        abort(404, description="Quest not found.")
+
+    if not quest.id_user_author == user_id:
+        abort(403, description="You can only edit your own quests.")
     data = request.get_json()
-    for key, value in data.items():
-        setattr(quest, key, value)
+
+    quest.name = data.get('name', quest.name)
+    quest.description = data.get('description', quest.description),
+    quest.time_restriction = data.get(
+        'time_restriction', quest.time_restriction)
+
     db.session.commit()
-    return jsonify(quest.to_dict())
+    return jsonify({'message': 'Quest updated successfully', 'quest': quest_to_dict(quest)}), 200
 
 
-@quests_bp.route('/quests/<int:quest_id>', methods=['DELETE'])
+@quests_bp.route('/quests/<int:quest_id>', methods=['DELETE'], endpoint="delete_quest")
+@jwt_required
 def delete_quest(quest_id):
-    quest = Quests.query.get_or_404(quest_id)
+    user_id = get_jwt_identity()
+    quest = Quests.query.get(quest_id)
+
+    if not quest:
+        abort(404, description="Quest not found.")
+
+    if not quest.id_user_author == user_id:
+        abort(403, description="You can only delete your own quests.")
+
     db.session.delete(quest)
     db.session.commit()
-    return jsonify({'message': 'Quests deleted'})
+    return jsonify({'message': 'Quest deleted successfully'}), 200

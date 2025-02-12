@@ -4,6 +4,7 @@ from flask_jwt_extended import JWTManager
 from models import db  # Import db from models.py
 import os
 from users import users_bp
+from quests import quests_bp
 
 
 def create_app():
@@ -19,6 +20,7 @@ def create_app():
         db.create_all()  # Create tables if they don't already exist
 
     app.register_blueprint(users_bp)
+    app.register_blueprint(quests_bp)
 
     @app.route('/')
     def index():

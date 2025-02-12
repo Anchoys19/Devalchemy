@@ -173,7 +173,7 @@ def update_user():
     db.session.commit()  # Commit the changes to the database
 
     # Return success message
-    return jsonify({'message': 'User updated successfully'}), 200
+    return jsonify({'message': 'User updated successfully', 'user': user_to_dict(user)}), 200
 
 
 # DELETE current user
