@@ -1,8 +1,8 @@
 from flask import Blueprint, abort, request, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from models import db, Quests
+from models import db, Quests, QuestReviews, QuestTasks, QuestTaskTestOptions, PassedQuests, PassedQuestTasks
 
-quests_bp = Blueprint('quests', __name__)
+quest_tasks_bp = Blueprint('quests', __name__)
 
 
 def quest_to_dict(quest: Quests) -> dict:

@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, abort
-from models import Users, SocialMediaAccount, QuestReviews, db
+from models import Users, SocialMediaAccount, db
 from passlib.hash import argon2
 from google.oauth2 import id_token
 from google.auth.transport import requests
