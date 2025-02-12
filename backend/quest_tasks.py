@@ -99,9 +99,9 @@ def update_quest_task(quest_task_id):
     return jsonify({'message': 'QuestTask updated successfully', 'quest_task': quest_task_to_dict(quest_task)}), 200
 
 
-@quest_tasks_bp.route('/quest_tasks/<int:quest_task_id>', methods=['DELETE'], endpoint="delete_quest")
+@quest_tasks_bp.route('/quest_tasks/<int:quest_task_id>', methods=['DELETE'], endpoint="delete_quest_task")
 @jwt_required()
-def delete_quest(quest_task_id):
+def delete_quest_task(quest_task_id):
     user_id = get_jwt_identity()
     quest_task = QuestTasks.query.get(quest_task_id)
     quest = quest_task.quests
